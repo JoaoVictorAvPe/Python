@@ -36,12 +36,16 @@ for dictionary in questions:
                 print(f'{number}) {option}')
 
         elif i == 2:
-            answer = int(input('Escolha uma opção: '))
-            if number_answer[answer] == quest_text:
-                print('Acertou')
-                correct_answers += 1
-            else:
-                print('Errou')     
+            try:
+                answer = int(input('Escolha uma opção: '))
+                if number_answer[answer] == quest_text:
+                    print('Acertou')
+                    correct_answers += 1
+                else:
+                    print('Errou')     
+            except KeyError:
+                print('Invalid option')
+                continue
     print('')
 print(f'Voce acertou {correct_answers} de {len(questions)} perguntas')
 
