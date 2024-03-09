@@ -25,7 +25,7 @@ for dictionary in questions:
         quest_text = dictionary[quest_key]
 
         if i == 0:
-            print(f'{quest_key}: {quest_text}')
+            print(f'{quest_key}: {quest_text}?')
 
         if i == 1:
             options_list = quest_text
@@ -46,6 +46,8 @@ for dictionary in questions:
             except KeyError:
                 print('Invalid option')
                 continue
+            except ValueError:
+                print('Just numbers are accepted')
     print('')
 print(f'Voce acertou {correct_answers} de {len(questions)} perguntas')
 
