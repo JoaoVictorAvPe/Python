@@ -8,9 +8,9 @@ def check(string, array):
             return False
     return True
 
-secret_word = 'piranha'
+secret_word = 'hospital'.upper()
 
-discovered_letters = []
+discovered_letters = set()
 
 attempts = len(secret_word) + 3
 
@@ -21,8 +21,8 @@ print(f'\nYOU HAVE {attempts} ATTEMPTS')
 
 while True:
 
-    letter = input('\nType a letter: ')
-    os.system('clear')
+    letter = input('\nType a letter: ').upper()
+    os.system('cls')
 
     if len(letter) != 1:
         print('Invalid character')
@@ -31,8 +31,7 @@ while True:
     for secret_letter in secret_word:
         if letter == secret_letter or secret_letter in discovered_letters:
             print(secret_letter,  end='')
-            if secret_letter not in discovered_letters:
-                discovered_letters.append(secret_letter)
+            discovered_letters.add(secret_letter)
         else:
             print('*', end='')
 
