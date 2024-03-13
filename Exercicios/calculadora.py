@@ -4,12 +4,12 @@ def entra_numero(msg):
         try:
             numero = float(numero)
             return numero
-        except:
+        except ValueError:
             print('Numero inválido')
             continue
 
 def entra_operador(msg):
-    operadores = "+-*/"
+    operadores = '+', '-', '*', '/'
     while True:
         operador = input(msg)
         if operador in operadores and operador != '':
