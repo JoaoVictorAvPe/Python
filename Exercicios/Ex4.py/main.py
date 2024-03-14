@@ -19,8 +19,8 @@ produtos = [
 # Aumente os preços dos produtos a seguir em 10%
 import models.dic_utils as modic
 
-for dic in produtos:
-    modic.increase_price(10, dic)
+new_list = modic.increase_price(10, produtos)
 
-for dic in produtos:
-    modic.print_dic(dic)
+for dic in new_list:
+    print(dic)
+

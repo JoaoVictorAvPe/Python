@@ -1,1 +1,1 @@
-Repositorio de arquivos de estudo Python
+Repositório de arquivos de estudo Python
