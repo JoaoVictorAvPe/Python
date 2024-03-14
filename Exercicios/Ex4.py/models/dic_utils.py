@@ -1,11 +1,18 @@
-def increase_price(percent:float, list_:list) -> list:
-    new_list = []
-    for dic in list_:
-        new_dic = {}
-        new_list.append(new_dic)
-        for key, value in dic.items():
-            if key == 'preco':
-                new_dic[key] =round(value + value * (percent / 100), 2)
-            else:
-                new_dic[key] = value
-    return new_list
+from copy import deepcopy
+
+def increase_price(percent:float, my_list:list) -> list:
+    return [{**dic, 'preco':round(dic['preco'] + (dic['preco'] * (percent / 100)), 2)} for dic in deepcopy(my_list)]
+
+
+
+def order_by(my_list:list, orderator:str, do_reverse=False) -> list:
+    try:
+        return sorted(deepcopy(my_list), key=lambda dic : dic[orderator], reverse=do_reverse)
+    except KeyError:
+       print(f'ERROR IN order_by: "{orderator}" is invalid')
+
+def print_list(my_list:list) -> None:
+    for dic in my_list:
+        value, key = dic.values()
+        print(value, key, sep=": ")
+
