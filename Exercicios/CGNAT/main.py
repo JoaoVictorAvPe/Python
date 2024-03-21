@@ -88,4 +88,33 @@ ip reserved-blocks 126
 subscribers-per-ip 126
 !
 '''
-print(get_port_blocks(output_port_blocks))
+
+lista = []
+with open('Exercicios/CGNAT/max_subscribers.txt', 'r') as arquivo:
+    lista = arquivo.readlines()
+
+
+def get_max_sub(lista):
+    current_nat = ''
+    inform = {}
+
+    for line in lista:
+        if line == '!\n':
+            continue
+
+        if 'bng nat profile named' in line:
+            current_nat = line.replace('bng nat profile named', '').strip()
+            continue
+
+        if 'max-subscribers' in line:
+            inform[current_nat] = line.replace('max-subscribers', '').strip()
+
+    inform.pop('') 
+    return inform
+
+print(get_max_sub(lista))
+
+
+
+
+

@@ -1,5 +1,8 @@
 __pycache__/
+venv/
+teste.txt
 .env
 *.pyc
 *.csv
 *.log
+*.json
