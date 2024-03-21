@@ -1,0 +1,318 @@
+!Last configuration change at 15:13:17 BRT Wed Mar 20 2024 on tty3 by user cli@local from host localhost
+!
+vrf local
+service timestamp log datetime localtime msec show-timezone year 
+service timestamp debug datetime localtime msec show-timezone year 
+service management ssh 
+!
+hostname bsa-cp1
+!
+ip tcp path-mtu-discovery
+!
+logging timestamp
+logging console debugging
+logging buffered 104857600 debugging
+!
+clock timezone BRT -3
+!
+context local
+ service management ssh
+ !
+ logging host 172.16.0.254 port 8514
+ logging origin-id hostname 
+ !
+ aaa group default
+  radius authentication algorithm priority 
+  radius authentication attribute nas-ip-address 172.16.40.6
+  radius authentication server ipv4-address 172.16.10.49 encrypted-key 1BE7BC57708EAC4F739FD494893E0B60A7FDFB096C0DB92F
+  radius authentication server ipv4-address 172.16.20.49 encrypted-key B0A2BB1E565C42A107A9304AD4AFC9CDD3938498ACA41A78 priority 101 
+  radius accounting algorithm priority 
+  radius accounting failover max-retries 2 
+  radius accounting attribute nas-ip-address 172.16.40.6
+  radius accounting server ipv4-address 172.16.10.49 encrypted-key FDEF7F0A7328749CAA1C9E50C66955E9540951941F02CF94
+  radius accounting server ipv4-address 172.16.20.49 encrypted-key 3D5284C12FBF4174B6F71FF294DD2AB4D83F81D29A2D97E7 priority 101 
+  radius coa server ipv4-address any max-outstanding 255 
+  radius coa client ipv4-address 172.16.10.49 encrypted-key 3CF77622F594FB13014B5C72750C682BC274448EBA6CCEC7
+  radius coa client ipv4-address 172.16.20.49 encrypted-key B929456662DA7A0D92B428A3A7C7AC6C7B7A700D1A85CD57
+  radius coa client ipv4-address 10.244.0.0 encrypted-key C41D935BF4ACD770595CA8918C65C12579C196A6004783D1
+  radius coa client ipv4-address 10.244.0.1 encrypted-key 87922E67CD9E1A0AA71EEEA824989F202E48A19F1E71AEC2
+  radius coa client ipv4-address 10.244.1.0 encrypted-key 95902C8A25279EDE83EFCF6441865D8895711C98FD04094B
+  radius coa client ipv4-address 10.244.1.1 encrypted-key 50E345B3BDBFC081A827ECF6B1B9B1F79CBADA47A7C78CC5
+ !
+ domain wr
+ !
+ administrator cli privilege 15 encrypted 67C6697351FF4AEC817B4471F137518C6952
+ administrator nogoseke privilege 15 encrypted 190F23C432AA5F178CCEAFFE117D5FCB
+ administrator alves privilege 15 encrypted 4EB5D9B74CC534DFF9CA70683EFB09AB
+ administrator woitas privilege 15 encrypted 06950A20AF3160D5C07A95C62A0A2C70
+ administrator bogo privilege 15 encrypted DE9C1655C5D995DEDD0B5C3DC0FE167B
+ administrator santos privilege 15 encrypted E9B8A21B620132B05F43EC46673DB209
+ administrator pinheiro privilege 15 encrypted B60C6702D19BE1D7E13065C5E17DC577
+ administrator carvalho privilege 14 encrypted 30EBF7DF1C57B5FB3B4EAB2B71DC87B0
+ administrator toste privilege 14 encrypted F4CB50B9A4E5988D7F89C52980646B0C
+ administrator ramos privilege 14 encrypted 9E3AA9003CDBB1F2836D48106AF7C6DE
+ administrator chagas privilege 14 encrypted E718F5B8B4D690E49FBBF9BBF7291C63
+ administrator marinho privilege 14 encrypted C287C4DEDF79D9D3265891986C9C02B1
+ administrator shimizu privilege 14 encrypted 5F1FAD9BFA5E8DE2F7CEBCFABE10C02A
+ administrator soares privilege 14 encrypted B2D3F9914CD3649055FF6BEC7F219541
+ administrator privatalli privilege 14 encrypted FCF0790B15EFB8747EB49B350DE39DCD
+ administrator saraiva privilege 14 encrypted 0E660F08C49CEA3BC56A56B0C158F8AF
+ administrator simoes privilege 14 encrypted 1F856678AF769361EBD38971997B19EE
+ administrator nascimento privilege 14 encrypted 498CF2965F56265CCFDA3F1191004C10
+ administrator cardeal privilege 14 encrypted EF3BBB15FC034ADB44814C8016251438
+ administrator souza privilege 14 encrypted 299F02845F53953A42B881EBE182E2C5
+ administrator miguel privilege 14 encrypted 0DDCBBD18AA412306086FE8AD42D0218
+ administrator cgnat privilege 14 encrypted FC49A97DBF0D08BD9263DAB305BDD989
+ !
+ !
+ !
+ !
+ service redundancy
+  redis-master address 127.0.0.1 port 6379
+ !
+ !
+ bng ipv6 delegated-prefix-pool delegated-pool-Brasilia-01 2804:214:1e:6000::/51 64 group v6-pd-Brasilia-01
+ bng ipv6 delegated-prefix-pool delegated-pool-Brasilia-01 dynamic-ranges size 8192
+ bng ipv6 delegated-prefix-pool sky-delegated-pool-Brasilia-01 2804:214:1e:e000::/51 64 group v6-sky-pd-Brasilia-01
+ bng ipv6 delegated-prefix-pool sky-delegated-pool-Brasilia-01 dynamic-ranges size 8192
+ !
+ bng arp-probe-response yes
+!
+ bng nto1-vlan 
+!
+ service pppoe default 
+  authentication method pref-chap 
+  keepalive timeout 30 max-retry 2
+  disable cookie
+  max-sessions per-mac 2 
+  retransmission timeout 30 
+  max-retry terminate 5 configure 5 
+ ! 
+ no bng web-filter malware-phishing notification-interval
+ !
+ bng subscriber create on-switchover
+ bng redis-client local
+ bng subscriber session timeout 0
+ no bng subscriber reauth-on-dhcp-renew
+ twag profile s2a default
+ !
+ twag profile gn default
+ !
+  bng pba-logging
+ no bng ap throughput-monitor
+ no bng dns-bridge enable
+ bng nat profile authenticated default
+  max-subscribers 10
+  block-size 1 blocks 512
+ !
+ bng nat profile unauthenticated default
+  max-subscribers 10
+  block-size 64
+  port-parity disable 
+ !
+ bng nat profile named nat-BSA-01
+  max-subscribers 4096
+  block-size 512 blocks 3
+  ip pool cgnat-group-BSA-01
+  ip alloc-type hybrid
+  ip reserved-blocks 63
+  subscribers-per-ip 63
+ !
+ bng nat profile named nat-BSA-SKY01
+  max-subscribers 1024
+  block-size 256 blocks 4
+  ip pool cgnat-group-BSA-SKY01
+  ip alloc-type hybrid
+  ip reserved-blocks 126
+  subscribers-per-ip 126
+ !
+ip dscp cs1 protocol all
+!
+ dhcp server policy
+  maximum-lease-time 600
+  default-lease-time 4000
+  offer-lease-time 600
+  dns-server 189.40.198.89 secondary 189.40.198.95
+  bind ipv4-address 100.64.0.1
+  bind ipv4-address 100.64.32.1
+  subnet 100.64.0.0/19 
+   match subscriber-group 1
+   range 100.64.0.2 to 100.64.31.254
+  !
+  subnet 100.64.32.0/19 
+   match subscriber-group 2
+   range 100.64.32.2 to 100.64.63.254
+  !
+ !
+ dhcpv6 server policy
+  dns6-server 2804:214:8000:ffff::95 secondary 2804:214:8000:ffff::89
+  bind address 2804:214:1e:4000::178
+  preferred-lease-time 4000
+  renew-time 50
+  rebind-time 80
+!
+!
+ ip domain-lookup
+ !
+ interface Access loopback
+  no shutdown
+  ip address 10.10.10.1/24  
+  ip address 100.64.0.1/19 secondary
+  ip address 100.64.32.1/19 secondary
+  ipv6 address 2804:214:1e:4000::178/128
+  bng gateway tunnel enable
+  bng gateway q-in-q enable ethertype 0x8100
+  bng gateway aaa group default
+  bng gateway service pppoe default
+ !
+ ip pool cgnat-pool-BSA-01 186.228.11.128/26 group cgnat-group-BSA-01 
+ ip pool cgnat-pool-BSA-SKY01 186.228.11.32/29 group cgnat-group-BSA-SKY01 
+ ipv6 dynamic-pool-group bsa-iana-pool ipv6-prefix 2804:214:1e:4000::/51 size 8192 
+ ipv6 dynamic-pool-group bsa-sky-iana-pool ipv6-prefix 2804:214:1e:c000::/51 size 8192 
+ !
+ bng subscriber policy acl default
+  acl default
+  acl6 default6
+ !
+ bng subscriber policy qos 25M-25M-DSL-GEN
+   downstream rate-limit 25000
+   upstream rate-limit 25000
+  !
+ bng subscriber policy qos 100M-100M-DSL-GEN
+   downstream rate-limit 100000
+   upstream rate-limit 100000
+  !
+ bng subscriber policy qos 1000-500
+   downstream rate-limit 1000000
+   upstream rate-limit 500000
+  !
+ bng subscriber policy qos 100-50
+   downstream rate-limit 100000
+   upstream rate-limit 50000
+  !
+ bng subscriber policy qos 200-100
+   downstream rate-limit 200000
+   upstream rate-limit 100000
+  !
+ bng subscriber policy qos 300-150
+   downstream rate-limit 300000
+   upstream rate-limit 150000
+  !
+ bng subscriber policy qos 400-200
+   downstream rate-limit 400000
+   upstream rate-limit 200000
+  !
+ bng subscriber policy qos 500-250
+   downstream rate-limit 500000
+   upstream rate-limit 250000
+  !
+ bng subscriber policy qos 600-300
+   downstream rate-limit 600000
+   upstream rate-limit 300000
+  !
+ bng subscriber policy qos 700-350
+   downstream rate-limit 700000
+   upstream rate-limit 350000
+  !
+ bng subscriber policy qos 800-400
+   downstream rate-limit 800000
+   upstream rate-limit 400000
+  !
+ bng subscriber policy qos 900-450
+   downstream rate-limit 900000
+   upstream rate-limit 450000
+  !
+ bng subscriber policy qos 256k-128k
+   downstream rate-limit 256
+   upstream rate-limit 128
+  !
+ bng portal-authentication policy sequence 1
+  match vlan 2 to 4094
+ !
+ bng nd nd-dhcpv6
+  hop-limit 255
+  nd-mtu 1280
+  ra-interval 600
+  dns-lifetime 1200
+  dns-ipv6-list 2804:214:8000:ffff::95 2804:214:8000:ffff::89  
+  reachable-time 1
+  ipv6-prefix life-time valid 864000 preferred 864000 
+  router-lifetime 9000
+  retransmission-time 1
+  unsolicited-ra enable 
+  ipv6-prefix auto-flag enable
+  managed-config-flag enable 
+  other-config-flag enable 
+  ipv6-prefix onlink-flag disable
+  ipv6-prefix router-flag enable
+  !
+ !
+ bng subscriber redundancy-group BSA-01 
+  user-plane id bsb-up-1-1 primary port 0 vrrp 2
+  user-plane id bsb2-up-1-1 secondary port 0 vrrp 2
+  bng match remote-id 
+ ! 
+ bng subscriber group 1
+  svlan 2
+  svlan 3900 cvlan 300
+  svlan 501
+  subscriber redundancy-group BSA-01 
+  ipv6 prefix-pool group bsa-iana-pool 
+  ipv6 delegated-prefix-pool group v6-pd-Brasilia-01 
+  nat profile nat-BSA-01
+  remote-id default
+ ! 
+ bng subscriber group 2
+  subscriber redundancy-group BSA-01 
+  ipv6 prefix-pool group bsa-sky-iana-pool 
+  ipv6 delegated-prefix-pool group v6-sky-pd-Brasilia-01 
+  nat profile nat-BSA-SKY01
+  remote-id SKY
+ ! 
+ ! 
+ ! 
+ ! 
+ ! 
+ ! 
+ ! 
+ ! 
+ ! 
+ service pfcp default 
+  heartbeat interval 30   
+  heartbeat retry-count 16   
+  heartbeat retry-timeout 60   
+  heartbeat include-source-ip 
+  retransmission-timeout 60 
+  max-retransmissions 5 
+  node-id-type fqdn
+  include cp-to-up-def-cpri-rule
+  up-restoration enable
+  lcp-keepalive-offload  
+ ! 
+ !
+!
+ tech-support backup interval 30 lifetime 2
+ service restconf-server
+!
+!
+snmp location Benu Networks Inc, 300 Concord Road, Billerica MA 01821
+snmp contact support@benunets.com
+snmp view defaultView 1 included
+snmp community public ro 
+snmp group public v1 
+snmp group public v2c 
+snmp server 
+snmp enable informs
+!
+!
+!
+!
+!
+!
+!
+!
+!
+alias nsubs show bng subscribers | include AUTH | count
+!
+!
+end
