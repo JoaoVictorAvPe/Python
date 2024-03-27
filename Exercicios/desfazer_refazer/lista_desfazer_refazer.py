@@ -1,9 +1,15 @@
 import os
 import pathlib
 import json
+import logging
 
-ROOT_DIR = pathlib.Path('./Exercicios')
-JSON_PATH = ROOT_DIR / 'lista_tarefas.json'
+
+ROOT_DIR = pathlib.Path()
+FILES_PATH = ROOT_DIR / 'Exercicios/lista_desfazer_refazer/'
+JSON_PATH = FILES_PATH / 'lista_tarefas.json'
+LOG_PATH = FILES_PATH / 'lista_defazer_refazer.log'
+
+logging.basicConfig(level=logging.DEBUG, filename=LOG_PATH, format='%(asctime)s - %(levelname)s -> %(message)s', encoding='utf8')
 
 def listar(lista:list) -> None:
     print('\nTAREFAS:')
@@ -52,32 +58,42 @@ while True:
 
     if resposta == 'listar':
         listar(tarefas)
+        logging.debug(f'Função listar executada com sucesso...')
 
     elif resposta == 'desfazer':
         desfazer(tarefas, tarefas_desfeitas)
+        logging.debug('Função desfazer executada com sucesso...')
         listar(tarefas)
     
     elif resposta == 'refazer':
         refazer(tarefas, tarefas_desfeitas)
+        logging.info('Item refeito com sucesso')
+        logging.debug('Função refazer executada com sucesso...')
         listar(tarefas)
     
     elif resposta == 'SAIR':
         print('SAINDO...')
+        logging.debug('Programa finalizado...')
         break
 
     elif resposta == 'clear':
         os.system('cls')
+        logging.debug('Comando "clear" executado com sucesso...')
 
     elif resposta == 'salvar':
         salvar(tarefas, tarefas_desfeitas)
+        logging.debug('Comando salvar executado com sucesso...')
         print('\nTarefas salvas...')
 
     elif resposta == 'ler':
         ler()
+        logging.debug('Comando ler executado com sucesso...')
         print('\nTarefas recarregadas...')
+
 
     else:
         tarefas.append(resposta)
+        logging.debug('Novo item adicionado a lista com sucesso...')
         print('\n', resposta, 'adicionado')
         listar(tarefas)
     
